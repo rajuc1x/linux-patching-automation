@@ -1,0 +1,27 @@
+---
+- name: Enterprise OS Patching Engine
+  hosts: patch_targets
+  become: true
+  serial: 1
+
+  tasks:
+    - name: Refresh package cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
+    - name: Upgrade OS packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        purge: yes
+
+    - name: Check reboot requirement
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_flag
+
+    - name: Reboot if required
+      reboot:
+        reboot_timeout: 300
+      when: reboot_flag.stat.exists
