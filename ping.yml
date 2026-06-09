@@ -1,0 +1,6 @@
+- name: Test SSH via bastion
+  hosts: private
+  gather_facts: false
+  tasks:
+    - name: Ping host
+      ping:
