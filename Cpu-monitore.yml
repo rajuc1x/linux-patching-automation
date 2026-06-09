@@ -21,7 +21,7 @@
       debug:
         msg: "Current CPU usage is {{ cpu_usage }}%"
 
-    - name: Fail if CPU usage is above threshold
-      fail:
-        msg: "⚠️ High CPU usage detected: {{ cpu_usage }}%"
-      when: cpu_usage > cpu_threshold
+    - name: Show CPU warning
+  debug:
+    msg: "⚠️ High CPU usage detected: {{ cpu_usage }}%"
+  when: cpu_usage > cpu_threshold
