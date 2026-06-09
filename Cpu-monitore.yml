@@ -1,0 +1,27 @@
+---
+- name: CPU Monitoring Playbook
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    cpu_threshold: 80   # alert if CPU usage > 80%
+
+  tasks:
+
+    - name: Get CPU idle percentage
+      shell: "top -bn1 | grep 'Cpu(s)' | awk '{print $8}' | cut -d. -f1"
+      register: cpu_idle
+
+    - name: Calculate CPU usage
+      set_fact:
+        cpu_usage: "{{ 100 - cpu_idle.stdout | int }}"
+
+    - name: Display CPU usage
+      debug:
+        msg: "Current CPU usage is {{ cpu_usage }}%"
+
+    - name: Fail if CPU usage is above threshold
+      fail:
+        msg: "⚠️ High CPU usage detected: {{ cpu_usage }}%"
+      when: cpu_usage > cpu_threshold
