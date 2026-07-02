@@ -1,0 +1,15 @@
+- name: auto start windows services
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Ensure the service is enabled and started
+      win_service:
+        name: "{{ item }}"
+        start_mode: auto
+        state: started
+      loop:
+        - "TaskScheduler"
+        - "windows update"
+        - "windows insights"

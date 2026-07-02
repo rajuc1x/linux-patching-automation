@@ -1,0 +1,9 @@
+- name: Pull AD Report
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Pull AD Report
+      win_shell: |
+        Get-ADUser -Filter * -Properties * | Select-Object Name, SamAccountName, Enabled, LastLogonDate | Export-Csv -Path "C:\AD_Report.csv" -NoTypeInformation
